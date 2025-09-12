@@ -1,100 +1,132 @@
 package test;
-import java.util.*;
+
+import java.util.Scanner;
+
+class Nodes {
+    int data;
+    Nodes next;
+
+    Nodes(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
 
 public class LinkedList {
-    Node head;
+    Nodes head;
 
-    static class Node {
-        int data;
-        Node next;
-        Node(int d) {
-            data = d;
-            next = null;
-        }
-    }
-
-    // Insert at end
-    public void insert(int data) {
-        Node newNode = new Node(data);
-
+    public void add(int data) {
+        Nodes newNode = new Nodes(data);
         if (head == null) {
             head = newNode;
             return;
         }
-
-        Node last = head;
-        while (last.next != null) {
-            last = last.next;
+        Nodes current = head;
+        while (current.next != null) {
+            current = current.next;
         }
-
-        last.next = newNode;
+        current.next = newNode;
     }
 
-    // Insert at beginning
-    public void insertAtBeginning(int data) {
-        Node newNode = new Node(data);
-        newNode.next = head;
-        head = newNode;
-    }
-
-    // Delete at position
-    public void delete(int position) {
-        if (head == null) return;
-
-        Node temp = head;
-
-        if (position == 1) {
-            head = temp.next;
+    public void insertAtPosition(int data, int position) {
+        Nodes newNode = new Nodes(data);
+        if (position == 0) {
+            newNode.next = head;
+            head = newNode;
             return;
         }
 
-        for (int i = 1; temp != null && i < position - 1; i++) {
-            temp = temp.next;
+        Nodes current = head;
+        for (int i = 0; i < position - 1 && current != null; i++) {
+            current = current.next;
         }
 
-        if (temp == null || temp.next == null) return;
+        if (current == null) {
+            System.out.println("Position out of bounds.");
+            return;
+        }
 
-        temp.next = temp.next.next;
+        newNode.next = current.next;
+        current.next = newNode;
     }
 
-    // Print linked list
-    public void printList() {
-        Node currNode = head;
-        System.out.print("LinkedList: ");
-        while (currNode != null) {
-            System.out.print(currNode.data + " ");
-            currNode = currNode.next;
+    public void deleteByValue(int value) {
+        if (head == null) {
+            System.out.println("List is empty.");
+            return;
         }
-        System.out.println();
+
+        if (head.data == value) {
+            head = head.next;
+            return;
+        }
+
+        Nodes current = head;
+        while (current.next != null && current.next.data != value) {
+            current = current.next;
+        }
+
+        if (current.next == null) {
+            System.out.println("Value " + value + " not found.");
+        } else {
+            current.next = current.next.next;
+        }
+    }
+
+    public void printList() {
+        Nodes current = head;
+        System.out.print("Linked List: ");
+        while (current != null) {
+            System.out.print(current.data + " -> ");
+            current = current.next;
+        }
+        System.out.println("null");
     }
 
     public static void main(String[] args) {
         LinkedList list = new LinkedList();
-        Scanner sc = new Scanner(System.in);
+        Scanner in = new Scanner(System.in);
 
-        System.out.print("Enter number of elements to insert: ");
-        int n = sc.nextInt();
-
+       
+        System.out.print("Enter the number of initial elements to add: ");
+        int n = in.nextInt();
+        System.out.println("Enter " + n + " elements:");
         for (int i = 0; i < n; i++) {
-            System.out.print("Enter element " + (i + 1) + ": ");
-            int value = sc.nextInt();
-            list.insert(value);
+            int data = in.nextInt();
+            list.add(data);
+        }
+        list.printList();
+
+        
+        while (true) {
+            System.out.print("Do you want to insert a value? (yes/no): ");
+            String ans = in.next().toLowerCase();
+            if (!ans.equals("yes")) break;
+
+            System.out.print("Enter value to insert: ");
+            int insertValue = in.nextInt();
+            System.out.print("Enter position to insert at: ");
+            int position = in.nextInt();
+            list.insertAtPosition(insertValue, position);
+            list.printList();
         }
 
+        
+        while (true) {
+            System.out.print("Do you want to delete a value? (yes/no): ");
+            String ans = in.next().toLowerCase();
+            if (!ans.equals("yes")) break;
+
+            System.out.print("Enter value to delete: ");
+            int deleteValue = in.nextInt();
+            list.deleteByValue(deleteValue);
+            list.printList();
+        }
+
+        
+        System.out.println("\nFinal Linked List:");
         list.printList();
 
-        System.out.print("Enter position to delete: ");
-        int pos = sc.nextInt();
-        list.delete(pos);
-        System.out.print("List after deletion of " + pos + "th element: ");
-        list.printList();
-
-        System.out.print("Enter element to insert at beginning: ");
-        int newVal = sc.nextInt();
-        list.insertAtBeginning(newVal);
-        System.out.print("List after insertion at beginning: ");
-        list.printList();
-
-        sc.close();
+        in.close();
     }
 }
