@@ -1,3 +1,6 @@
+package test;
+import java.lang.*;
+import java.util.*;
 class BinarySearch {
 
     static int binarySearch(int[] arr, int key) {
@@ -9,7 +12,7 @@ class BinarySearch {
             mid = (left + right) / 2;
 
             if (key == arr[mid]) {
-                return mid;  // element found
+                return mid;  
             } else if (key < arr[mid]) {
                 right = mid - 1;
             } else {
@@ -17,7 +20,7 @@ class BinarySearch {
             }
         }
 
-        return -1;  // element not found
+        return -1;  
     }
 
     public static void main(String[] args) {
@@ -33,3 +36,4 @@ class BinarySearch {
         }
     }
 }
+
